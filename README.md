@@ -1,3 +1,3 @@
 # go-crowdfund
 
-Crowdfunding website
+Crowdfunding website built with Golang
