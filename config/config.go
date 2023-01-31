@@ -12,7 +12,12 @@ type AppConfig struct {
 	DBHost string
 	DBPort int
 	DBName string
+	JWTKey string
 }
+
+var (
+	JWTKEY = ""
+)
 
 func InitConfig() *AppConfig {
 	return ReadEnv()
@@ -35,6 +40,8 @@ func ReadEnv() *AppConfig {
 		log.Println("error parse config : ", err.Error())
 		return nil
 	}
+
+	JWTKEY = app.JWTKey
 
 	return &app
 }
