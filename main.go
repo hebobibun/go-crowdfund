@@ -12,7 +12,7 @@ func main() {
 	cfg := config.InitConfig()
 	db := config.InitDB(*cfg)
 
-	userRepository := user.New(db)
+	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
 	userHandler := handler.NewUserhandler(userService)
 
@@ -21,6 +21,7 @@ func main() {
 
 	api.POST("/register", userHandler.RegisterUser)
 	api.POST("/login", userHandler.Login)
+	api.POST("/email_check", userHandler.CheckEmailAvailability)
 
 	router.Run()
 }
