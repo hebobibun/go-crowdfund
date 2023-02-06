@@ -19,6 +19,15 @@ func NewUserhandler(userService user.Service, authService auth.Service) *userHan
 	return &userHandler{userService, authService}
 }
 
+// Register			godoc
+// @Summary 		Register User
+// @Description		Insert a new data user to DB
+// @Param			request body user.RegisterUserInput true "data user"
+// @Accept			application/json
+// @Produce			application/json
+// @Tags			User
+// @Success			201 {object} helper.Response{}
+// @Router 			/register [post]
 func (h *userHandler) Register(c *gin.Context) {
 	var input user.RegisterUserInput
 
