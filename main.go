@@ -3,16 +3,28 @@ package main
 import (
 	"crowdfund/auth"
 	"crowdfund/config"
+	_ "crowdfund/docs"
 	"crowdfund/handler"
 	"crowdfund/helper"
 	"crowdfund/user"
+	"fmt"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title			Crowdfund Service API
+// @version 		1.0
+// @description 	Crowdfund Service API in Go using Gin Framework
+
+// @host			localhost:8000
+// @server			https://localhost:8000
+// @schemes			https
+// @BasePath		/api/v1
 func main() {
 	cfg := config.InitConfig()
 	db := config.InitDB(*cfg)
@@ -23,6 +35,10 @@ func main() {
 	userHandler := handler.NewUserhandler(userService, authService)
 
 	router := gin.Default()
+
+	// Add Swagger
+	router.GET("docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	api := router.Group("/api/v1")
 
 	api.POST("/register", userHandler.Register)
@@ -38,6 +54,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 		authHeader := c.GetHeader("Authorization")
 
 		if !strings.Contains(authHeader, "Bearer") {
+			fmt.Println("disini")
 			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
@@ -51,6 +68,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 
 		token, err := authService.ValidateToken(tokenString)
 		if err != nil {
+			fmt.Println("disini 2")
 			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
@@ -58,6 +76,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 
 		claim, ok := token.Claims.(jwt.MapClaims)
 		if !ok || !token.Valid {
+			fmt.Println("disini 3")
 			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return
@@ -67,6 +86,7 @@ func authMiddleware(authService auth.Service, userService user.Service) gin.Hand
 
 		user, err := userService.GetUserByID(userID)
 		if err != nil {
+			fmt.Println("disini 4")
 			response := helper.APIResponse("Unauthorized", http.StatusUnauthorized, "error", nil)
 			c.AbortWithStatusJSON(http.StatusUnauthorized, response)
 			return

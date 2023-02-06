@@ -1,0 +1,65 @@
+basePath: /api/v1
+definitions:
+  helper.Meta:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      status:
+        type: string
+    type: object
+  helper.Response:
+    properties:
+      data: {}
+      meta:
+        $ref: '#/definitions/helper.Meta'
+    type: object
+  user.RegisterUserInput:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      occupation:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - name
+    - occupation
+    - password
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: Crowdfund Service API in Go using Gin Framework
+  title: Crowdfund Service API
+  version: "1.0"
+paths:
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Insert a new data user to DB
+      parameters:
+      - description: data user
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.RegisterUserInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/helper.Response'
+      summary: Register User
+      tags:
+      - User
+schemes:
+- https
+swagger: "2.0"
